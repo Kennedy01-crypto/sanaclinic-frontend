@@ -38,3 +38,11 @@ Open `http://localhost:3000`. For complete backend and frontend startup instruct
 - `app/globals.css`: global styles and Tailwind import.
 
 The patient and administrator dashboards call the Django API at `http://localhost:8000/api` by default. Set `NEXT_PUBLIC_API_URL` in the frontend environment to override that base URL. Admin management endpoints require a Django staff account.
+
+## Deployment and CI/CD
+
+The frontend production URL is not yet confirmed; add the verified public URL here after the Vercel project is deployed.
+
+The GitHub Actions workflow is [`.github/workflows/ci-cd.yml`](./.github/workflows/ci-cd.yml). Pull requests targeting `main` and pushes to `main` run ESLint and a production build. Vercel's Git integration independently deploys production from `main`; GitHub Actions only validates the code and does not deploy.
+
+No Vercel deployment secrets are needed in GitHub Actions. Require the `lint-and-build` status check before merging pull requests and protect `main` from direct pushes if production changes must always pass CI. Configure `NEXT_PUBLIC_API_URL=https://sanaclinic-backend.vercel.app/api` and `NEXT_PUBLIC_DJANGO_URL=https://sanaclinic-backend.vercel.app` in the Vercel project environment. See the backend README for API deployment configuration and the cross-site cookie authentication consideration.
