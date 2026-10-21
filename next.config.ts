@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
-const djangoApiOrigin = (
-  process.env.DJANGO_API_PROXY_TARGET ?? "http://localhost:8000"
-).replace(/\/$/, "");
+const djangoApiOrigin = (process.env.DJANGO_API_URL ?? "http://localhost:8000").replace(
+  /\/$/,
+  "",
+);
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
