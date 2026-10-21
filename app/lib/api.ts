@@ -12,9 +12,10 @@ export type PortalUser = {
   emergency_contact: string;
 };
 
-const API_BASE = (
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"
-).replace(/\/$/, "");
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? "/backend-api").replace(
+  /\/$/,
+  "",
+);
 const DJANGO_BASE = (
   process.env.NEXT_PUBLIC_DJANGO_URL ?? API_BASE.replace(/\/api$/, "")
 ).replace(/\/$/, "");

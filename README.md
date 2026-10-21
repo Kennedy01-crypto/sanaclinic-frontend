@@ -37,7 +37,7 @@ Open `http://localhost:3000`. For complete backend and frontend startup instruct
 - `app/layout.tsx`: shared root layout and page metadata.
 - `app/globals.css`: global styles and Tailwind import.
 
-The patient and administrator dashboards call the Django API at `http://localhost:8000/api` by default. Set `NEXT_PUBLIC_API_URL` in the frontend environment to override that base URL. Admin management endpoints require a Django staff account.
+The patient and administrator dashboards call Django through the same-origin `/backend-api` route. In local development, `DJANGO_API_PROXY_TARGET` defaults to `http://localhost:8000`; admin management endpoints require a Django staff account.
 
 ## Deployment and CI/CD
 
@@ -45,4 +45,6 @@ The frontend production URL is not yet confirmed; add the verified public URL he
 
 The GitHub Actions workflow is [`.github/workflows/ci-cd.yml`](./.github/workflows/ci-cd.yml). Pull requests targeting `main` and pushes to `main` run ESLint and a production build. Vercel's Git integration independently deploys production from `main`; GitHub Actions only validates the code and does not deploy.
 
-No Vercel deployment secrets are needed in GitHub Actions. Require the `lint-and-build` status check before merging pull requests and protect `main` from direct pushes if production changes must always pass CI. Configure `NEXT_PUBLIC_API_URL=https://sanaclinic-backend.vercel.app/api` and `NEXT_PUBLIC_DJANGO_URL=https://sanaclinic-backend.vercel.app` in the Vercel project environment. See the backend README for API deployment configuration and the cross-site cookie authentication consideration.
+No Vercel deployment secrets are needed in GitHub Actions. Require the `lint-and-build` status check before merging pull requests and protect `main` from direct pushes if production changes must always pass CI.
+
+For the frontend Vercel project, set `NEXT_PUBLIC_API_URL=/backend-api`, `DJANGO_API_PROXY_TARGET=https://sanaclinic-backend.vercel.app`, and `NEXT_PUBLIC_DJANGO_URL=https://sanaclinic-backend.vercel.app` in the Production environment (and Preview if preview deployments should use the backend). Redeploy after changing these values. The Next.js rewrite forwards `/backend-api/*` to the Django `/api/*` endpoints, so browser API calls and authentication cookies use the frontend's origin. Django Admin links continue to open the backend directly. See the backend README for the backend's production environment configuration.

@@ -34,4 +34,6 @@ jobs:
         run: npm run lint
 
       - name: Build frontend
+        env:
+          DJANGO_API_PROXY_TARGET: https://sanaclinic-backend.vercel.app
         run: npm run build

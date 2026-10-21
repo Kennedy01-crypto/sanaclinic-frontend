@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
+const djangoApiOrigin = (
+  process.env.DJANGO_API_PROXY_TARGET ?? "http://localhost:8000"
+).replace(/\/$/, "");
+
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  skipTrailingSlashRedirect: true,
   turbopack: {
     rules: {
       "*.css": {
@@ -11,6 +15,14 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/backend-api/:path*",
+        destination: `${djangoApiOrigin}/api/:path*/`,
+      },
+    ];
   },
 };
 
